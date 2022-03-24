@@ -1,0 +1,6 @@
+vpython/
+cryptoauthlib/
+libp11/
+aws-iot-device-sdk-python-v2/
+cal-app/
+.vscode/
