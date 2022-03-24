@@ -1,5 +1,7 @@
 # Kickstart Embedded - Parry Tech SIM7600EI RPi Hat Evaluation
 
+**!!! THIS IS A WORK-IN-PROGRESS !!!**
+
 ## Objectives
 
 
@@ -8,11 +10,11 @@
 
 ## Major milestones
 
-1. Enable PPP-link with SIM7600EI on Raspberry Pi
-2. Build and test Microchip's cryptoauthlib on Raspberry Pi with PKCS11 support enabled
-3. Enroll ATECC608-TNGTLS to AWS IoT cloud account
-4. Use AWS IoT SDK (C or Python) with PKCS11 support to perform pub-sub
-5. Achieve two-way communication between Raspberry Pi and AWS dashboard/GUI/CLI with node
+1. &#9989; Enable PPP-link with SIM7600EI on Raspberry Pi
+2. &#9989; Build and test Microchip's cryptoauthlib on Raspberry Pi with PKCS11 support enabled
+3. &#9989; Enroll ATECC608-TNGTLS to AWS IoT cloud account
+4. &#10060; Use AWS IoT SDK (C or Python) with PKCS11 support to perform pub-sub
+5. &#10060; Achieve two-way communication between Raspberry Pi and AWS dashboard/GUI/CLI with node
 
 ##  Software 
 - Raspberry Pi Buster (32-bit)
@@ -266,8 +268,6 @@ Use `python3` everywhere if `python2` and `python3` both exist.
 ```console
 $ pip install awsiotsdk
 ```
-
-** THIS IS A WORK-IN-PROGRESS **
 
 
 
