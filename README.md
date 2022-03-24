@@ -267,8 +267,7 @@ Use `python3` everywhere if `python2` and `python3` both exist.
 $ pip install awsiotsdk
 ```
 
-### Step 3 - 
-
+** THIS IS A WORK-IN-PROGRESS **
 
 
 
