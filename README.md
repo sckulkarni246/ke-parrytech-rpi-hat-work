@@ -36,13 +36,13 @@
 
 ### Step 1 - Installing PPP
 To install PPP, open a terminal window and execute the below command.
-```console
+```
 $ sudo apt install ppp
 ```
 
 ### Step 2 - Setting up provider
 We will write our own provider that we will supply to the PPP daemon. Create a file named `my-provider` inside /etc/ppp/peers folder. You may need root privileges to do the steps - so we will first start a root shell.
-```console
+```
 $ sudo su
 $ vim /etc/ppp/peers/my-provider
 ```
@@ -76,7 +76,7 @@ connect "/usr/sbin/chat -v -f /etc/chatscripts/my-gprs"
 
 ### Step 3 - Setting up chatscript
 It is a good idea to place the chatscript inside `/etc/chatscripts/` folder. We will call our chatscript `my-chatscript`. Execute the below as root (continue the previous shell).
-```console
+```
 $ vim /etc/chatscripts/my-chatscript
 ```
 
@@ -114,26 +114,26 @@ If your provider uses a different chatscript, create the new file with that name
 
 ### Step 4 - Start a PPP connection
 To start the PPP link, execute the below as root.
-```console
+```
 $ pon my-provider
 ```
 If all goes well, you should see PPP-related logs in your `dmesg` output.
 
 Check that the `ppp0` interface is up using `ifconfig`.
-```console
+```
 $ ifconfig ppp0
 ```
 
 ### Step 5 - Check that you have internet connectivity on ppp0 using ping
 Verify internet connectivity by trying to ping google.com using the `ppp0` interface.
 
-```console
+```
 $ ping google.com -I ppp0
 ```
 
 ### Step 6 - Exit root shell
 We no more need the root shell - can choose to exit now.
-```console
+```
 $ exit
 ```
 
@@ -141,14 +141,14 @@ $ exit
 
 ### Step 1 - Fetch cryptoauthlib from MicrochipTech github repo and checkout v3.3.3
 Execute the below from a non-root shell at a location of your choice.
-```console
+```
 $ git clone https://github.com/MicrochipTech/cryptoauthlib
 $ cd cryptoauthlib
 ```
 
 ### Step 2 - Create a directory to hold the cmake build outputs inside cryptoauthlib
 Execute the below from a non-root shell while you are inside the cryptoauthlib folder.
-```console
+```
 $ mkdir my-cal-build
 $ cd my-cal-build
 ```
@@ -164,11 +164,11 @@ $ cd my-cal-build
 
 ### Step 4 - Build and install cryptoauthlib
 1. Execute make from within my-cal-build folder
-```console
+```
 $ make
 ```
 2. Install the library so that applications can use it
-```console
+```
 $ sudo make install
 ```
 
@@ -176,7 +176,7 @@ $ sudo make install
 Ensure that the packages mentioned in the  software setion above have been installed beforehand.
 
 1. Obtain, configure, build and install libp11. NOTE: It is not necessary to do this from within cryptoauthlib - you can navigate to any other path as needed.
-```console
+```
 $ git clone https://github.com/OpenSC/libp11.git
 $ cd libp11
 $ ./bootstrap
@@ -187,7 +187,7 @@ $ sudo make install
 
 ### Step 6 - Create PKCS11 slot 0
 When you installed cryptoauthlib, it created a template slot configuration at `/var/lib/cryptoauthlib`. Copy this template in the same folder as a file named `0.conf`.
-```console
+```
 $ cp /var/lib/cryptoauthlib/slot.conf.tmpl /var/lib/cryptoauthlib/0.conf
 ```
 
@@ -205,7 +205,7 @@ interface = i2c,0x6A,1
 ### Step 7 - Test PKCS11 interface
 1. Connect DT100104 to the I2C pins on Raspberry Pi 40-pin connector
 2. On the command line, we will try to test the PKCS11 interface by listing all available objects.
-```console
+```
 $ p11tool --provider /usr/lib/arm-linux-gnueabihf/libcryptoauth.so --list-all
 ```
 You should see output something like below.
@@ -254,7 +254,7 @@ Please follow the instructions in Trust Platform Design Suite v2 (AWS - Trust&GO
 ### Step 1 - Get the AWS IoT Python SDK
 
 Navigate into any preferred path on your system, clone the AWS IoT Python SDK and checkout tag v1.10.0.
-```console
+```
 $ git clone https://github.com/aws/aws-iot-device-sdk-python-v2.git
 $ cd aws-iot-device-sdk-python-v2
 ```
@@ -264,7 +264,7 @@ $ cd aws-iot-device-sdk-python-v2
 - Using Python3 is preferred. This procedure has been tested with Python3 only.
 
 To set up and activate a virtual environment, navigate to the directory where you want the virtual environment to reside and execute the below.
-```console
+```
 $ python3 -m venv vpython3
 $ . vpython3/bin/activate
 (vpython3) $
@@ -272,12 +272,12 @@ $ . vpython3/bin/activate
 You should now see your bash prompt preceded by the name of your virtual environment surrounded by parantheses.
 
 To install the AWS IoT Python SDK, execute the below command.
-```console
+```
 (vpython3) $ python3 -m pip install path/to/the/aws-iot-device-sdk-python-v2/repo
 ```
 
 To check that the installation was successful, run a `pip freeze` to see what modules the python environment has. 
-```console
+```
 (vpython3) $ pip freeze
 ```
 
@@ -294,7 +294,7 @@ We will now create an AWS IoT thing that we will then use for our future steps. 
 - Enter Thing name as `my_rpi_test_thing`. We don't need to configure any other optional feature as of now. Click `Next`.
 - Click on `Upload CSR`. We will now generate a CSR or Certificate Signing Request using our ATECC608-TNGTLS.
 - Connect the ATECC608-TNGTLS to the Raspberry Pi and execute the below command to generate the CSR. The below command will generate a CSR name `my_rpi_test_thing_csr.csr` in the `/home/pi` folder.
-```console
+```
 (vpython3) $ openssl req -engine pkcs11 -key "pkcs11:token=00ABC;object=device;type=private" -keyform engine -new -out my_rpi_test_thing.csr -subj "/CN=MY RPI TEST THING"
 ```
 - Go back to the AWS IoT Core portal and click on `Choose File` and select the newly created `my_rpi_test_thing_csr.csr` file.
@@ -309,7 +309,7 @@ We shall use this during our next steps.
 We are now ready to try out the sample application provided in the SDK. This application simply tries to connect to your AWS endpoint using the private key from the ATECC608-TNGTLS and the certificate provided to the application as an argument. If you followed step 3, then this certificate is the `rpi_test_thing_crt.crt` file.
 
 Navigate into the samples directory of the AWS IoT Python SDK and execute the below command. Remember to do this in an activated virtual environment.
-```console
+```
 (vpython3) $ python3 pkcs11_connect.py --endpoint a************-ats.iot.us-west-2.amazonaws.com --cert ~/my_rpi_test_thing_crt.crt --pkcs11_lib /usr/lib/libcryptoauth.so --token_label 00ABC --key_label device --pin 1234 --client_id my_rpi_test_thing --port 8883 --ca_file ~/AmazonRootCA1.pem --verbosity NoLogs
 ```
 In the above command
