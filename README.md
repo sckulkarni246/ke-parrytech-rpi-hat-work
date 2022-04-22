@@ -18,7 +18,7 @@
 
 ##  Software 
 - Raspberry Pi Buster (32-bit)
-- Microchip Cryptoauthlib (https://github.com/MicrochipTech/cryptoauthlib) tag -> v3.3.3
+- [Microchip Cryptoauthlib](https://github.com/MicrochipTech/cryptoauthlib)
 - Required apt packages: cmake, cmake-gui, openssl, libssl-dev, libengine-pkcs11-openssl1.1, autoconf, libtool, gnutls-bin 
 - AWS account
 
@@ -144,7 +144,6 @@ Execute the below from a non-root shell at a location of your choice.
 ```console
 $ git clone https://github.com/MicrochipTech/cryptoauthlib
 $ cd cryptoauthlib
-$ git checkout v3.3.3
 ```
 
 ### Step 2 - Create a directory to hold the cmake build outputs inside cryptoauthlib
@@ -258,16 +257,77 @@ Navigate into any preferred path on your system, clone the AWS IoT Python SDK an
 ```console
 $ git clone https://github.com/aws/aws-iot-device-sdk-python-v2.git
 $ cd aws-iot-device-sdk-python-v2
-$ git checkout v1.10.0
 ```
 ### Step 2 - Install the AWS IoT Python SDK
 
-If you prefer to work in a virtual environment, you can activate one now. Afte that, install the AWS IoT Python SDK by executing the below command. This command assumes python3 is the only `python` available on system. 
-Use `python3` everywhere if `python2` and `python3` both exist.
+- It is recommended to use a virtual environment for your development unless you are confident that installing new packages in not going to break any existing feature.
+- Using Python3 is preferred. This procedure has been tested with Python3 only.
 
+To set up and activate a virtual environment, navigate to the directory where you want the virtual environment to reside and execute the below.
 ```console
-$ pip install awsiotsdk
+$ python3 -m venv vpython3
+$ . vpython3/bin/activate
+(vpython3) $
+```
+You should now see your bash prompt preceded by the name of your virtual environment surrounded by parantheses.
+
+To install the AWS IoT Python SDK, execute the below command.
+```console
+(vpython3) $ python3 -m pip install path/to/the/aws-iot-device-sdk-python-v2/repo
 ```
 
+To check that the installation was successful, run a `pip freeze` to see what modules the python environment has. 
+```console
+(vpython3) $ pip freeze
+```
 
+### Step 3 - Set up a test thing using ATECC608-TNGTLS
 
+**You can choose to skip this step if you already have an AWS IoT thing whose credentials are inside the ATECC608-TNGTLS chip.** 
+
+We will now create an AWS IoT thing that we will then use for our future steps. AWS IoT Core makes it very easy to create a thing using its dashboard. Please follow the below steps. 
+
+- Log into your AWS account and select the `AWS IoT Core` service.
+- Click on `Manage` and then `Things`
+- Click on `Create Things` button
+- Select `Create Single Thing` and click `Next`
+- Enter Thing name as `my_rpi_test_thing`. We don't need to configure any other optional feature as of now. Click `Next`.
+- Click on `Upload CSR`. We will now generate a CSR or Certificate Signing Request using our ATECC608-TNGTLS.
+- Connect the ATECC608-TNGTLS to the Raspberry Pi and execute the below command to generate the CSR. The below command will generate a CSR name `my_rpi_test_thing_csr.csr` in the `/home/pi` folder.
+```console
+(vpython3) $ openssl req -engine pkcs11 -key "pkcs11:token=00ABC;object=device;type=private" -keyform engine -new -out my_rpi_test_thing.csr -subj "/CN=MY RPI TEST THING"
+```
+- Go back to the AWS IoT Core portal and click on `Choose File` and select the newly created `my_rpi_test_thing_csr.csr` file.
+- Select an existing policy if you have that allows an IoT Device to connect to your AWS IoT Core account. If you don't have one, create one now using [this documentation](https://docs.aws.amazon.com/iot/latest/developerguide/example-iot-policies.html). Once done, click `Create Thing`.
+
+Once the thing is created, you can select it, navigate to the `Certificates` tab and download the certificate associated with your thing and rename it to `my_rpi_test_thing_crt.crt`.
+
+We shall use this during our next steps.
+
+### Step 4 - Test the PKCS11 sample application
+
+We are now ready to try out the sample application provided in the SDK. This application simply tries to connect to your AWS endpoint using the private key from the ATECC608-TNGTLS and the certificate provided to the application as an argument. If you followed step 3, then this certificate is the `rpi_test_thing_crt.crt` file.
+
+Navigate into the samples directory of the AWS IoT Python SDK and execute the below command. Remember to do this in an activated virtual environment.
+```console
+(vpython3) $ python3 pkcs11_connect.py --endpoint a************-ats.iot.us-west-2.amazonaws.com --cert ~/my_rpi_test_thing_crt.crt --pkcs11_lib /usr/lib/libcryptoauth.so --token_label 00ABC --key_label device --pin 1234 --client_id my_rpi_test_thing --port 8883 --ca_file ~/AmazonRootCA1.pem --verbosity NoLogs
+```
+In the above command
+- Provide your own AWS endpoint - this can be obtained from the thing details on the AWS IoT Core dashboard
+- Provide a CA file in case you get a connection error. The `AmazonRootCA1.pem` can be obtained from [here](https://www.amazontrust.com/repository/AmazonRootCA1.pem).
+
+If all goes well, you should see a log as below.
+```
+Loading PKCS#11 library '/usr/lib/libcryptoauth.so' ...
+Loaded!
+Connecting to avu39804vjdlk-ats.iot.us-west-2.amazonaws.com with client ID 'my_rpi_test_thing'...
+Connected!
+Disconnecting...
+Disconnected!
+```
+
+**PRO-TIP: You can verify that the connection was done successfully by going back to your AWS IoT Core dashboard and then going to the Monitor page. Refresh the page after a couple of minutes, and you should see that a successful connection was done recently.**
+
+Give yourself a pat on the back - you have successfully performed your first successful mutual TLS authentication to AWS IoT Core using ATECC608-TNGTLS!
+
+### Step 5 - Let us do some Publish-Subscribe using our PKCS#11 based thing
