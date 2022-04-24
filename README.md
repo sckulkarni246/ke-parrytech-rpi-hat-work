@@ -13,7 +13,7 @@
 1. &#9989; Enable PPP-link with SIM7600EI on Raspberry Pi
 2. &#9989; Build and test Microchip's cryptoauthlib on Raspberry Pi with PKCS11 support enabled
 3. &#9989; Enroll ATECC608-TNGTLS to AWS IoT cloud account
-4. &#10060; Use AWS IoT SDK (C or Python) with PKCS11 support to perform pub-sub
+4. &#9989; Use AWS IoT SDK (C or Python) with PKCS11 support to perform pub-sub
 5. &#10060; Achieve two-way communication between Raspberry Pi and AWS dashboard/GUI/CLI with node
 
 ##  Software 
