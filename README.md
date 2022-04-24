@@ -19,8 +19,8 @@
 ##  Software 
 - Raspberry Pi Buster (32-bit)
 - [Microchip Cryptoauthlib](https://github.com/MicrochipTech/cryptoauthlib)
-- Required apt packages: cmake, cmake-gui, openssl, libssl-dev, libengine-pkcs11-openssl1.1, autoconf, libtool, gnutls-bin 
-- AWS account
+- Required apt packages: `cmake`, `cmake-gui`, `openssl`, `libssl-dev`, `libengine-pkcs11-openssl1.1`, `autoconf`, `libtool`, `gnutls-bin` 
+- AWS account with ability to perform AWS IoT Device Management operations
 
 ## Hardware
 - Raspberry Pi 3B
@@ -157,7 +157,7 @@ $ cd my-cal-build
 1. Open cmake-gui and provide the source code path as `path/to/cryptoauthlib` and build path as `path/to/cryptoauthlib/my-cal-build` directory.
 2. Click on Configure button
 3. There would be some default selections already - leave them untouched.
-4. Select these options using the checkbox next to them: ATCA_HAL_I2C, ATCA_OPENSSL, ATCA_PKCS11, ATCA_TFLEX_SUPPORT, ATCA_TNGTLS_SUPPORT, ATCA_TNGLORA_SUPPORT, ATCA_TNG_LEGACY_SUPPORT, ATCA_USE_ATCAB_FUNCTIONS
+4. Select these options using the checkbox next to them: `ATCA_HAL_I2C`, `ATCA_OPENSSL`, `ATCA_PKCS11`, `ATCA_TFLEX_SUPPORT`, `ATCA_TNGTLS_SUPPORT`, `ATCA_TNGLORA_SUPPORT`, `ATCA_TNG_LEGACY_SUPPORT`, `ATCA_USE_ATCAB_FUNCTIONS`
 5. Click on Configure button
 6. Click on Generate button
 7. Close cmake-gui
